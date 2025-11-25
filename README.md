@@ -20,7 +20,11 @@ A minimal FastAPI service that proxies chat completions to OpenAI. Built for Pyt
 uvicorn app.main:app --reload
 ```
 
-The app exposes `/chat/complete` as a POST endpoint.
+The app exposes:
+- `POST /chat/complete` for chat completions
+- `POST /embeddings` for embedding vectors
+- `POST /responses` for the Responses API (text out; supports image/text in via OpenAI)
+- `GET /health` for liveness
 
 ## Example request
 
@@ -29,6 +33,28 @@ curl -X POST http://localhost:8000/chat/complete \
   -H "Content-Type: application/json" \
   -d '{
     "prompt": "Give me a three-sentence summary of FastAPI.",
+    "model": "gpt-4o-mini"
+  }'
+```
+
+Embedding example:
+
+```bash
+curl -X POST http://localhost:8000/embeddings \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "FastAPI makes it easy to build APIs with Python.",
+    "model": "text-embedding-3-small"
+  }'
+```
+
+Responses API example:
+
+```bash
+curl -X POST http://localhost:8000/responses \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": "Tell me a three sentence bedtime story about a unicorn.",
     "model": "gpt-4o-mini"
   }'
 ```
